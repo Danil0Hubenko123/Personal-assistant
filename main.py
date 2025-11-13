@@ -63,8 +63,68 @@
 
 """Головний файл для запуску персонального помічника."""
 
+import sys
+# Імпортуємо всі необхідні компоненти з нових модулів
+from data_manager import save_data, load_data
+from handlers import parse_input, input_error, add_contact, change_contact, show_phone, show_all, add_birthday, show_birthday, show_birthdays, delete_contact, search_contacts
+from handlers import add_note, edit_note, delete_note, search_notes, sort_notes, show_all_notes
 
+# -----------------------------------------------------------------
+"""ОСНОВНИЙ ЦИКЛ БОТА"""
+# -----------------------------------------------------------------
 
+def main():
+    # Завантажуємо DataManager (включає AddressBook та NoteBook)
+    data_manager = load_data() 
+    
+    # Реєстрація всіх команд
+    handlers = {
+        "hello": lambda args, dm: "Чим я можу вам допомогти?",
+        # Контакти
+        "add": add_contact,
+        "change": change_contact,
+        "phone": show_phone,
+        "all": show_all,
+        "add-birthday": add_birthday,
+        "show-birthday": show_birthday,
+        "birthdays": show_birthdays,
+        "delete-contact": delete_contact,
+        "search": search_contacts, # Використовуємо 'search' як загальну
+        
+        # Нотатки
+        "add-note": add_note,
+        "edit-note": edit_note,
+        "delete-note": delete_note,
+        "all-notes": show_all_notes,
+        "search-note": search_notes,
+        "sort-notes": sort_notes,
+    }
+    
+    print("Ласкаво просимо до 'Персонального помічника'!")
+    print("\nДоступні команди (для детального синтаксису див. help):")
+    print("  Контакти: add, change, phone, all, delete-contact, search, add-birthday, show-birthday, birthdays")
+    print("  Нотатки:  add-note, edit-note, delete-note, all-notes, search-note, sort-notes")
+    print("  Системні: hello, закрити, вихід")
 
+    while True:
+        try:
+            user_input = input("\nВведіть команду: ").strip()
+            command, args = parse_input(user_input)
 
+            if command in ["закрити", "вихід"]:
+                # Зберігаємо дані перед виходом
+                save_data(data_manager) 
+                print("До побаченя! Дані збережено.")
+                break
 
+            if command in handlers:
+                # Передаємо аргументи та об'єкт DataManager
+                print(handlers[command](args, data_manager))
+            elif command:
+                print(f"Недійсна команда: '{command}'. Спробуйте 'вихід'.")
+            
+        except Exception as e:
+            print(f"Сталася непередбачена помилка в головному циклі: {e}")
+
+if __name__ == "__main__":
+    main()

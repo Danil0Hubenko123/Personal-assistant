@@ -1,0 +1,224 @@
+"Реалізація збереження даних помічника у файл data.json з використанням формату JSON."
+
+
+{
+  "description": "Реалізація збереження даних помічника у файл data.json з використанням формату JSON.",
+    "phone_numbers": [
+    {
+      "id": 1,
+      "name": "Іван Іванов",
+      "number": "+380 50 482 1735",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 2,
+    "name": null,
+      "number": "+380 67 914 5028",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 3,
+    "name": null,
+      "number": "+380 63 327 6491",
+      "type": "мобільний",
+      "is_active": false
+    },
+    {
+      "id": 4,
+    "name": null,
+      "number": "+380 96 158 0372",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 5,
+    "name": null,
+      "number": "+380 93 295 8746",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 6,
+    "name": null,
+      "number": "+380 66 701 3859",
+      "type": "робочий",
+      "is_active": true
+    },
+    {
+      "id": 7,
+    "name": null,
+      "number": "+380 98 862 9403",
+      "type": "мобільний",
+      "is_active": false
+    },
+    {
+      "id": 8,
+    "name": null,
+      "number": "+380 73 539 2164",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 9,
+    "name": null,
+      "number": "+380 50 190 7583",
+      "type": "домашній",
+      "is_active": true
+    },
+    {
+      "id": 10,
+    "name": null,
+      "number": "+380 67 456 0912",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 11,
+    "name": null,
+      "number": "+380 63 834 3071",
+      "type": "мобільний",
+      "is_active": false
+    },
+    {
+      "id": 12,
+    "name": null,
+      "number": "+380 96 247 1695",
+      "type": "робочий",
+      "is_active": true
+    },
+    {
+      "id": 13,
+    "name": null,
+      "number": "+380 93 502 8137",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 14,
+    "name": null,
+      "number": "+380 66 179 4560",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 15,
+    "name": null,
+      "number": "+380 98 623 0948",
+      "type": "домашній",
+      "is_active": false
+    },
+    {
+      "id": 16,
+    "name": null,
+      "number": "+380 73 340 5716",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 17,
+    "name": null,
+      "number": "+380 50 951 8234",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 18,
+    "name": null,
+      "number": "+380 67 218 4376",
+      "type": "робочий",
+      "is_active": true
+    },
+    {
+      "id": 19,
+    "name": null,
+      "number": "+380 63 685 0924",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 20,
+    "name": null,
+      "number": "+380 96 792 3518",
+      "type": "мобільний",
+      "is_active": false
+    },
+    {
+      "id": 21,
+    "name": null,
+      "number": "+380 93 403 6179",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 22,
+    "name": null,
+      "number": "+380 66 849 7250",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 23,
+    "name": null,
+      "number": "+380 98 056 1423",
+      "type": "домашній",
+      "is_active": true
+    },
+    {
+      "id": 24,
+    "name": null,
+      "number": "+380 73 117 8960",
+      "type": "мобільний",
+      "is_active": false
+    },
+    {
+      "id": 25,
+    "name": null,
+      "number": "+380 50 332 5074",
+      "type": "робочий",
+      "is_active": true
+    },
+    {
+      "id": 26,
+    "name": null,
+      "number": "+380 67 568 9310",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 27,
+    "name": null,
+      "number": "+380 63 920 4785",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 28,
+    "name": null,
+      "number": "+380 96 034 1162",
+      "type": "мобільний",
+      "is_active": true
+    },
+    {
+      "id": 29,
+    "name": null,
+      "number": "+380 93 745 2398",
+      "type": "домашній",
+      "is_active": false
+    },
+    {
+      "id": 30,
+    "name": null,
+      "number": "+380 66 281 6057",
+      "type": "мобільний",
+      "is_active": true
+    }
+  ]
+}
+
+
+
+
+
+
