@@ -2,11 +2,12 @@ from collections import UserDict
 from datetime import datetime, timedelta
 from typing import Optional, List
 from .validators import ContactValidator
+import re
 
 # ПОЛЯ (Field)
 
 class Field:
-    """Базовий клас для полів контакту."""
+    #Базовий клас для полів контакту.
     def __init__(self, value):
         self._value = value 
     
@@ -26,12 +27,10 @@ class Name(Field):
 
 class Phone(Field):
     def __init__(self, value):
-        # Використовуємо валідатор
         super().__init__(ContactValidator.validate_phone(value))
 
 class Email(Field):
     def __init__(self, value):
-        # Використовуємо валідатор
         super().__init__(ContactValidator.validate_email(value))
 
 class Address(Field):
@@ -39,7 +38,6 @@ class Address(Field):
 
 class Birthday(Field):
     def __init__(self, value):
-        # Використовуємо валідатор
         super().__init__(ContactValidator.validate_birthday(value))
 
     def __str__(self):
@@ -48,27 +46,27 @@ class Birthday(Field):
 # ЗАПИС (Contact)
 
 class Contact:
-    """Запис контакту з ім'ям, телефонами, email, адресою та днем народження."""
-    def __init__(self, name: str, address=None, email=None, birthday=None):
+    def __init__(self, name: str, address: Optional[str] = None, email: Optional[str] = None, birthday: Optional[str] = None):
+        if not isinstance(name, str): raise TypeError("Ім'я має бути рядком.")
+        
         self.name = Name(name)
-        self.phones: List[Phone] = []
+        self.phones: List[Phone] = [] 
+        
         self.address: Optional[Address] = Address(address) if address else None
         self.email: Optional[Email] = Email(email) if email else None
         self.birthday: Optional[Birthday] = Birthday(birthday) if birthday else None
 
     def add_phone(self, phone: str):
-        # Phone клас гарантує валідацію
         self.phones.append(Phone(phone))
 
     def edit_phone(self, old_phone: str, new_phone: str):
         for phone_obj in self.phones:
             if phone_obj.value == old_phone:
-                phone_obj.value = Phone(new_phone).value # Валідація нового номеру
+                phone_obj.value = Phone(new_phone).value
                 return
         raise ValueError(f"Старий номер телефону {old_phone} не знайдено.")
     
     def edit_field(self, field_name: str, new_value: str):
-        # Дозволяє редагувати інші поля з валідацією
         if field_name == 'email':
             self.email = Email(new_value)
         elif field_name == 'address':
@@ -79,52 +77,50 @@ class Contact:
             raise ValueError(f"Поле '{field_name}' не підтримується для прямого редагування.")
 
     def __str__(self):
+        #Виведення контакту у зручному форматі.
         phone_strings = '; '.join(str(p) for p in self.phones)
-        bday_str = f", ДН: {self.birthday}" if self.birthday else ""
-        email_str = f", Email: {self.email}" if self.email else ""
-        address_str = f", Адреса: {self.address}" if self.address else ""
-        return f"Ім'я: {self.name.value}, Телефон: {phone_strings}{bday_str}{email_str}{address_str}"
+        bday_str = f" | ДН: {self.birthday}" if self.birthday else ""
+        email_str = f" | Email: {self.email}" if self.email else ""
+        address_str = f" | Адреса: {self.address}" if self.address else ""
+        
+        info = f"Ім'я: {self.name.value}, Телефон: {phone_strings}{email_str}{address_str}{bday_str}"
+        return info
 
 # КНИГА (AddressBook)
 
 class AddressBook(UserDict):
     """Адресна книга для контактів."""
-    def add_record(self, record: Contact):
-        self.data[record.name.value.capitalize()] = record
-        
-    def find(self, name: str) -> Optional[Contact]:
-        return self.data.get(name.capitalize()) 
     
-    def delete(self, name: str):
-        capitalized_name = name.capitalize()
-        if capitalized_name in self.data:
-            del self.data[capitalized_name]
-        else:
-            raise KeyError(f"Контакт {capitalized_name}")
+    #  (add_record, find, delete методи) 
 
     def search(self, query: str) -> List[Contact]:
-        """Пошук за будь-яким полем: ім'я, телефон, email, адреса."""
+        """Пошук за ім'ям, email або номером телефону (case-insensitive)."""
         query = query.lower()
         results = []
         for record in self.data.values():
+            match = False
+            
+            # 1. Пошук за ім'ям (case-insensitive)
             if query in record.name.value.lower():
-                results.append(record)
-                continue
+                match = True
+            
+            # 2. Пошук за телефоном (шукаємо в очищеному від символів рядку)
             for phone in record.phones:
-                if query in phone.value:
-                    results.append(record)
+                cleaned_phone = re.sub(r'[^\d]', '', phone.value)
+                if query in cleaned_phone:
+                    match = True
                     break
+            
+            # 3. Пошук за email (case-insensitive)
             if record.email and query in record.email.value.lower():
+                match = True
+
+            if match:
                 results.append(record)
-                continue
-            if record.address and query in record.address.value.lower():
-                results.append(record)
-                continue
         return list(set(results))
 
-    def get_upcoming_birthdays(self, days=7) -> str:
-        """Виводить список контактів з днем народження протягом N днів, з урахуванням вихідних."""
-        # ... (логіка обчислення днів народження)
+    def get_upcoming_birthdays(self, days: int = 7) -> str:
+        #Виводить список контактів, у яких день народження настане через N днів.
         today = datetime.now().date()
         upcoming = []
         
@@ -155,7 +151,7 @@ class AddressBook(UserDict):
 
         upcoming.sort(key=lambda x: x[0])
         
-        result = [f"Дні народження протягом {days} днів:"]
+        result = [f"Дні народження протягом {days} днів (з урахуванням перенесення на робочі дні):"]
         for date, name in upcoming:
             result.append(f"{name}: {date.strftime('%d.%m.%Y')} ({date.strftime('%A')})")
         
