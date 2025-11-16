@@ -1,8 +1,12 @@
 from collections import UserDict
 from datetime import datetime, timedelta
 from typing import Optional, List
-from .validators import ContactValidator
 import re
+
+try:
+    from .validators import ContactValidator
+except ImportError:
+    from validators import ContactValidator
 
 # ПОЛЯ (Field)
 
@@ -91,7 +95,29 @@ class Contact:
 class AddressBook(UserDict):
     """Адресна книга для контактів."""
     
-    #  (add_record, find, delete методи) 
+    def add_record(self, contact: Contact) -> str:
+        """Додає контакт до адресної книги. Перевіряє дублікати."""
+        if contact.name.value in self.data:
+            return f"Контакт '{contact.name.value}' вже існує в адресній книзі."
+        self.data[contact.name.value] = contact
+        return f"Контакт '{contact.name.value}' успішно додано."
+    
+    def find(self, name: str) -> Optional[Contact]:
+        """Пошук контакту за ім'ям (case-insensitive)."""
+        # Спочатку пошук точного збігу
+        for key in self.data:
+            if key.lower() == name.lower():
+                return self.data[key]
+        return None
+    
+    def delete(self, name: str) -> str:
+        """Видаляє контакт за ім'ям (case-insensitive)."""
+        # Пошук контакту з врахуванням регістру
+        for key in list(self.data.keys()):
+            if key.lower() == name.lower():
+                del self.data[key]
+                return f"Контакт '{key}' видалено."
+        return f"Контакт '{name}' не знайдено." 
 
     def search(self, query: str) -> List[Contact]:
         """Пошук за ім'ям, email або номером телефону (case-insensitive)."""

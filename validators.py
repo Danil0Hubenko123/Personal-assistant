@@ -11,7 +11,7 @@ class ContactValidator:
             raise TypeError("Телефон має бути рядком.")
         
         # Видаляємо всі символи, крім цифр
-        cleaned_phone = re.sub(r'[^\\d]', '', phone)
+        cleaned_phone = re.sub(r'[^\d]', '', phone)
 
         # Вимога: від 10 до 13 цифр (включно)
         if not (10 <= len(cleaned_phone) <= 13):

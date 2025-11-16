@@ -1,4 +1,7 @@
-from .models import Contact, AddressBook
+try:
+    from .models import Contact, AddressBook
+except ImportError:
+    from models import Contact, AddressBook
 from typing import Callable
 
 # ДЕКОРАТОР input_error 
@@ -108,5 +111,59 @@ def show_birthdays(args: list[str], book: AddressBook) -> str:
             
     return book.get_upcoming_birthdays(days)
 
-# Додайте інші функції-обробники (show_contact_info, show_all, delete_contact, add_birthday) за необхідності.
+@input_error
+def show_contact_info(args: list[str], book: AddressBook) -> str:
+    """Виводить інформацію про контакт. show-info [ім'я]"""
+    if len(args) < 1: raise IndexError
+    
+    name = args[0].capitalize()
+    record = book.find(name)
+    
+    if not record:
+        raise KeyError(name)
+    
+    return str(record)
+
+@input_error
+def show_all(args: list[str], book: AddressBook) -> str:
+    """Виводить всі контакти в адресній книзі. show-all"""
+    if not book.data:
+        return "Адресна книга порожня."
+    
+    output = [f"Всього контактів: {len(book.data)}"]
+    output.append("=" * 80)
+    
+    for idx, (name, record) in enumerate(book.data.items(), 1):
+        output.append(f"{idx}. {record}")
+    
+    output.append("=" * 80)
+    return "\n".join(output)
+
+@input_error
+def delete_contact(args: list[str], book: AddressBook) -> str:
+    """Видаляє контакт з адресної книги. delete [ім'я]"""
+    if len(args) < 1: raise IndexError
+    
+    name = args[0].capitalize()
+    
+    # Перевіримо, чи існує контакт
+    if not book.find(name):
+        raise KeyError(name)
+    
+    return book.delete(name)
+
+@input_error
+def add_birthday(args: list[str], book: AddressBook) -> str:
+    """Додає або оновлює день народження контакту. add-birthday [ім'я] [ДД.МММ.РРРР]"""
+    if len(args) < 2: raise IndexError
+    
+    name = args[0].capitalize()
+    birthday = args[1]
+    
+    record = book.find(name)
+    if not record:
+        raise KeyError(name)
+    
+    record.edit_field('birthday', birthday)
+    return f"День народження контакту '{name}' встановлено: {birthday}."
 
